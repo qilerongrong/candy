@@ -13,11 +13,13 @@ export default new Router({
       component: () => import ( /* webpackChunkName : "index"  */ './views/home.vue')
     },
     {
+      path:'/login',
+      name:'login',
+      component: () => import ( /* webpackChunkName : "login"  */ './views/login.vue')
+    },
+    {
       path: '/account',
       name: 'account',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "account" */ './views/home.vue')
     }
   ]
