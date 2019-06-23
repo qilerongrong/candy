@@ -22,14 +22,14 @@
             <div  class="cellphone-input-wrapper">
               <div  class="cellphone-region-input">中国 +86</div>
               <div  class="cellphone-input-separator"></div>
-              <el-input placeholder="请输入手机号码" v-model="input"></el-input>
+              <el-input placeholder="请输入手机号码" v-model="input" size="medium" class="cellphone-number-input"></el-input>
             </div>
           </div>
         </div>
         <div  class="password-wrapper email-sign-up-section-wrapper">
           <div  class="sign-up-detail-title">密码</div>
           <div  class="relative password-input-wrapper">
-            <el-input placeholder="请输入密码" v-model="input" show-password></el-input>
+            <el-input placeholder="请输入密码" size="medium" v-model="input" show-password></el-input>
           </div>
           <span  class="forget-password">忘记密码？</span>
         </div>
@@ -108,13 +108,13 @@ export default {
   display: none;
 }
 .sign-up-detail-wrapper {
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 0.20rem;
+  margin-right: 0.20rem;
 }
 .sign-up-detail-title {
   text-align: left;
-  font-size: 16px;
-  margin-bottom: 6px;
+  font-size: 0.16rem;
+  margin-bottom: 0.06px;
 }
 .cellphone-input-wrapper,
 .verification-input-wrapper {
@@ -122,24 +122,24 @@ export default {
   display: -ms-flexbox;
   display: flex;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-  height: 35px;
+  height: 0.35rem;
 }
 .cellphone-input-wrapper {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
 .cellphone-region-input {
-  line-height: 35px;
-  font-size: 12px;
-  margin-right: 8px;
-  margin-left: 8px;
+  line-height: 0.35rem;
+  font-size: 0.12rem;
+  margin-right: 0.08rem;
+  margin-left: 0.08rem;
   width: 22%;
 }
 .cellphone-input-separator {
-  height: 20px;
+  height: 0.20rem;
   width: 1px;
   background-color: black;
-  margin-top: 8px;
+  margin-top: 0.08rem;
 }
 .cellphone-number-input {
   font-family: Montserrat-Regular;
@@ -148,67 +148,79 @@ export default {
   text-align: left;
   margin-left: 4%;
   margin-right: 4%;
-  font-size: 16px;
+  font-size: 0.16rem;
   width: 65%;
+  .el-input__inner{
+    border:0 none;
+    border-radius: 0px;
+  }
+  
 }
 .register-button {
   background-color: #3d66cc;
   color: white;
-  font-size: 20px;
-  height: 45px;
+  font-size: 0.20rem;
+  height: 0.45rem;
   border-radius: 4px;
-  line-height: 45px;
-  margin: 20px;
+  line-height: 0.45rem;
+  margin: 0.20rem;
+  text-align:center;
 }
 .have-got-account-txt {
-  font-size: 14px;
-  margin-top: 6px;
+  font-size: 0.14rem;
+  margin-top: 0.6rem;
+  text-align:center;
 }
-.email-input {
-  font-family: Montserrat-Regular;
-  border: none;
-  border-radius: 0px;
-  text-align: left;
-  font-size: 16px;
-  width: 100%;
-  height: 35px;
-}
+// .email-input {
+//   font-family: Montserrat-Regular;
+//   border: none;
+//   border-radius: 0px;
+//   text-align: left;
+//   font-size: 16px;
+//   width: 100%;
+//   height: 35px;
+// }
 .email-sign-up-section-wrapper {
-  margin-top: 10px;
+  margin-top: 0.10rem;
 }
 .form-item-error {
-  height: 14px;
-  font-size: 11px;
+  height: 0.14rem;
+  font-size: 0.11rem;
   font-family: Montserrat-Regular;
   font-weight: normal;
   color: #ff0051;
-  line-height: 10px;
+  line-height: 0.10rem;
   text-align: left;
   width: 100%;
   display: block;
-  margin-top: 4px;
+  margin-top: 0.04rem;
 }
 .link-button {
   color: #3d66cc;
-  padding: 2px;
+  padding: 0.02rem;
   display: inline-block;
   border-bottom: 1px solid #3d66cc;
 }
 .referral-code-wrapper {
-  margin: 10px 20px;
+  margin: 0.10rem 0.20rem;
 }
 .password-wrapper {
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 0.20rem;
+  margin-right: 0.20rem;
+}
+.password-input-wrapper{
+  .el-input{
+    display:block;
+  }
 }
 .forget-password {
   display: block;
   text-align: right;
-  font-size: 12px;
-  margin-top: 5px;
+  font-size: 0.12rem;
+  margin-top: 0.05rem;
   color: #3d66cc;
 }
 .sign-up-detail-wrapper {
-  margin-top: 40px;
+  margin-top: 0.40rem;
 }
 </style>
