@@ -29,15 +29,26 @@
         <div  class="password-wrapper email-sign-up-section-wrapper">
           <div  class="sign-up-detail-title">密码</div>
           <div  class="relative password-input-wrapper">
-            <el-input placeholder="请输入密码" size="medium" v-model="input" show-password></el-input>
+            <el-input placeholder="输入密码" size="medium" v-model="input" show-password></el-input>
           </div>
-          <span  class="forget-password">忘记密码？</span>
         </div>
-        <div  class="register-button">点此登录</div>
+        <div  class="password-wrapper email-sign-up-section-wrapper">
+          <div  class="sign-up-detail-title">确认密码</div>
+          <div  class="relative password-input-wrapper">
+            <el-input placeholder="确认密码" size="medium" v-model="input" show-password></el-input>
+          </div>
+        </div>
+        <div  class="password-wrapper email-sign-up-section-wrapper">
+          <div  class="sign-up-detail-title">邀请码（选填）</div>
+          <div  class="relative password-input-wrapper">
+            <el-input placeholder="输入邀请码" size="medium" v-model="input" show-password></el-input>
+          </div>
+        </div>
+        <div  class="register-button">注册</div>
         <div  class="h5-footer-wrapper">
           <div  class="have-got-account-txt text-center">
-            <span  class="have-got-account">还没有账号？</span>
-            <router-link :to="{name:'regist'}"><span  class="link-button">去注册</span></router-link>
+            <span  class="have-got-account">已有账号？</span>
+            <router-link :to="{name:'login'}"><span  class="link-button">去登录</span></router-link>
           </div>
         </div>
       </div>

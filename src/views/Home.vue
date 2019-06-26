@@ -49,4 +49,12 @@ export default {
       height:0.3rem;
       margin-right:0.18rem;
     }
+    .list{
+      display:flex;
+      overflow-x: auto;
+      flex-shrink:0
+    }
+    .list::-webkit-scrollbar{
+      display:none
+    }
 </style>
