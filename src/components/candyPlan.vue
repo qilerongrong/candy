@@ -28,14 +28,14 @@
 <style lang="scss" scoped>
 .program-wrapper {
   width: 2.50rem;
-  margin-left: 0.20rem;
+  // margin-left: 0.20rem;
   -webkit-box-shadow: 0rem 2px 10px 0px rgba(158, 169, 190, 0.65);
   box-shadow: 0rem 0.02rem 0.10rem 0rem rgba(158, 169, 190, 0.65);
   border-radius: 0.10rem;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: right -0.60rem top 0.25rem;
-  background-image: url(/img/keeper-item-bg.0dda4b6e.png);
+  background-image: url(../assets/imgs/bg1.png);
   background-color: #EEFFF9;
   position: relative;
 }

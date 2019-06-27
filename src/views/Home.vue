@@ -5,10 +5,12 @@
         <span class="title" slot="center">糖果</span>
         <img class="avatar" src="../assets/imgs/avatar.png" slot="right">
       </header-bar>
-      <div class="plist">
-        <div class="title">糖果派送，存币解锁</div>
-        <div class="list">
-          <candy-plan v-for="(item, index) in plist" :key="index"></candy-plan>
+      <div class="test">
+        <div class="plist">
+          <div class="title">糖果派送，存币解锁</div>
+          <div class="list">
+            <candy-plan class="plan" v-for="(item, index) in plist" :key="index"></candy-plan>
+          </div>
         </div>
       </div>
   </div>
@@ -49,10 +51,21 @@ export default {
       height:0.3rem;
       margin-right:0.18rem;
     }
+    .plist{
+      .title{
+        font-size:0.28rem;
+        line-height:0.34rem;
+        margin:0.2rem 0.2rem 0.1rem;
+      }
+    }
     .list{
       display:flex;
       overflow-x: auto;
-      flex-shrink:0
+      margin:0 0.08rem;
+      .plan{
+        flex-shrink:0;
+        margin:0 0.1rem;
+      }
     }
     .list::-webkit-scrollbar{
       display:none
