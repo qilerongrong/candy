@@ -22,29 +22,36 @@
             <div  class="cellphone-input-wrapper">
               <div  class="cellphone-region-input">中国 +86</div>
               <div  class="cellphone-input-separator"></div>
-              <el-input placeholder="请输入手机号码" v-model="input" size="medium" class="cellphone-number-input"></el-input>
+              <el-input placeholder="请输入手机号码" v-model="username" size="medium" class="cellphone-number-input"></el-input>
             </div>
           </div>
         </div>
         <div  class="password-wrapper email-sign-up-section-wrapper">
           <div  class="sign-up-detail-title">密码</div>
           <div  class="relative password-input-wrapper">
-            <el-input placeholder="输入密码" size="medium" v-model="input" show-password></el-input>
+            <el-input placeholder="输入密码" size="medium" v-model="password" show-password></el-input>
           </div>
         </div>
         <div  class="password-wrapper email-sign-up-section-wrapper">
           <div  class="sign-up-detail-title">确认密码</div>
           <div  class="relative password-input-wrapper">
-            <el-input placeholder="确认密码" size="medium" v-model="input" show-password></el-input>
+            <el-input placeholder="确认密码" size="medium" v-model="confirmPassword" show-password></el-input>
           </div>
         </div>
         <div  class="password-wrapper email-sign-up-section-wrapper">
           <div  class="sign-up-detail-title">邀请码（选填）</div>
           <div  class="relative password-input-wrapper">
-            <el-input placeholder="输入邀请码" size="medium" v-model="input" show-password></el-input>
+            <el-input placeholder="输入邀请码" size="medium" v-model="inviteCode" show-password></el-input>
           </div>
         </div>
-        <div  class="register-button">注册</div>
+        <div  class="password-wrapper email-sign-up-section-wrapper">
+          <div  class="sign-up-detail-title">验证码</div>
+          <div  class="relative verify-code-wrapper">
+            <el-input placeholder="手机验证码" size="medium" v-model="verifyCode"></el-input>
+            <el-button class="btn-code" @click="getVerifyCode()" size="medium">{{codeTip}}</el-button>
+          </div>
+        </div>
+        <div  class="register-button" @click="regist">注册</div>
         <div  class="h5-footer-wrapper">
           <div  class="have-got-account-txt text-center">
             <span  class="have-got-account">已有账号？</span>
@@ -59,8 +66,36 @@
 <script>
 import headerBar from "@/components/headerBar.vue";
 export default {
+  data(){
+    return {
+      username:'',
+      password:'',
+      confirmPassword:'',
+      inviteCode:'',
+      verifyCode:'',
+      codeTip:'获取验证码'
+    }
+  },
   components: {
     headerBar
+  },
+  methods:{
+    regist(){
+      this.$store.dispatch('user/regist',{
+        username:this.username,
+        password:this.password,
+        verifyCode:this.verifyCode,
+        inviteCode:this.inviteCode
+      }).then((res) => {
+        console.log(res);
+        if(res.code === 0){
+          this.$router.push({name:'login'});
+        }
+      });
+    },
+    getVerifyCode(){
+      this.$store.dispatch('user')
+    }
   }
 };
 </script>
@@ -165,7 +200,6 @@ export default {
     border:0 none;
     border-radius: 0px;
   }
-  
 }
 .register-button {
   background-color: #3d66cc;
@@ -233,5 +267,17 @@ export default {
 }
 .sign-up-detail-wrapper {
   margin-top: 0.40rem;
+}
+.verify-code-wrapper{
+  display:flex;
+  justify-content: space-between;
+  .btn-code{
+    flex-basis: 0.86rem;
+    margin-left:0.14rem;
+  }
+}
+
+.el-input__inner:hover,.el-input__inner:focus{
+  border:0 none;
 }
 </style>

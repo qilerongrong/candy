@@ -22,18 +22,18 @@
             <div  class="cellphone-input-wrapper">
               <div  class="cellphone-region-input">中国 +86</div>
               <div  class="cellphone-input-separator"></div>
-              <el-input placeholder="请输入手机号码" v-model="input" size="medium" class="cellphone-number-input"></el-input>
+              <el-input placeholder="请输入手机号码" v-model="username" size="medium" class="cellphone-number-input"></el-input>
             </div>
           </div>
         </div>
         <div  class="password-wrapper email-sign-up-section-wrapper">
           <div  class="sign-up-detail-title">密码</div>
           <div  class="relative password-input-wrapper">
-            <el-input placeholder="请输入密码" size="medium" v-model="input" show-password></el-input>
+            <el-input placeholder="请输入密码" size="medium" v-model="password" show-password></el-input>
           </div>
           <span  class="forget-password">忘记密码？</span>
         </div>
-        <div  class="register-button">点此登录</div>
+        <div  class="register-button" @click="login">点此登录</div>
         <div  class="h5-footer-wrapper">
           <div  class="have-got-account-txt text-center">
             <span  class="have-got-account">还没有账号？</span>
@@ -48,8 +48,19 @@
 <script>
 import headerBar from "@/components/headerBar.vue";
 export default {
+  data(){
+    return {
+      username:'',
+      password:''
+    }
+  },
   components: {
     headerBar
+  },
+  methods:{
+    login(){
+      
+    }
   }
 };
 </script>

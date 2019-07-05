@@ -26,6 +26,10 @@ export default new Router({
       path: '/account',
       name: 'account',
       component: () => import(/* webpackChunkName: "account" */ './views/account.vue')
+    },{
+      path:'/record',
+      name:'record',
+      component: () => import(/* webpackChunkName: "record" */ './views/record.vue')
     }
   ]
 })
