@@ -1,23 +1,38 @@
 import api from '../api/index.js' 
 const state = {
-    user:{
-        username:null
+    userInfo:{
+        username:null,
+        telCountryCode:'86',
+        token:null,
+        status:0 // -1:未登录，0:登录状态，1:
     },
-    token:null,
-    loginStatus:-1 // -1 初始, 0 未登录，1 登录
-
+    wallet:{}
 }
 
 const mutations = {
     setUserInfo(state,userInfo){
-
+        state.userInfo = userInfo;
+        const storage = window.localStorage;
+        if(storage){
+            storage.setItem('userInfo',JSON.stringify(userInfo));
+        }
+    },
+    updateWallet(state,wallet){
+        state.wallet = wallet;
     }
 }
 
 const actions = {
-    login({commit},{ username, password }){
-        api.user.regist({ username, password }).then(() => {
-            commit();
+    login({commit},{ username, password, phoneCode, telCountryCode='86'}){
+        return api.user.login({ username, password, phoneCode,}).then((data) => {
+            const userInfo = {
+                username:username,
+                telCountryCode,
+                token:data,
+                status:1
+            }
+            commit('setUserInfo',userInfo);
+            // return res;
         });
     },
     regist({ commit },{ username, password, verifyCode}){
@@ -25,14 +40,19 @@ const actions = {
         // const res = await api.user.regist({ username, password, verifyCode,telCountryCode });
         // console.log(res);
         // return res;
-        api.user.regist({ username, password, verifyCode,telCountryCode }).then((res) => {
-            debugger;
-            return res.data;
-            // console.log(res);
-        })
+        return api.user.regist({ username, password, verifyCode,telCountryCode });
     },
     logout(){
 
+    },
+    async wallet({ commit }){
+        const result = await api.user.wallet();
+        const wallet = result[0];
+        commit('updateWallet',wallet);
+        return result;
+    },
+    async verifyCode({ commit },{username}){
+        await api.user.fetchVerifyCode({username});
     }
 }
 

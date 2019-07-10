@@ -3,14 +3,18 @@
       <header-bar>
         <img class="message" src="../assets/imgs/message.png" slot="left"/>
         <span class="title" slot="center">糖果</span>
-        <img class="avatar" src="../assets/imgs/avatar.png" slot="right">
+        <router-link :to="{name:'account'}" slot="right"><img class="avatar" src="../assets/imgs/avatar.png" ></router-link>
       </header-bar>
-      <div class="test">
-        <div class="plist">
-          <div class="title">糖果派送，存币解锁</div>
-          <div class="list">
-            <candy-plan class="plan" v-for="(item, index) in plist" :key="index"></candy-plan>
-          </div>
+      <div class="plist">
+        <div class="title">糖果派送，存币解锁</div>
+        <div class="list">
+          <candy-plan class="plan" v-for="(item, index) in candyPlans" :key="index" :model="item"></candy-plan>
+        </div>
+      </div>
+      <div class="plist">
+        <div class="title">每日奖励</div>
+        <div class="list">
+          <div></div>
         </div>
       </div>
   </div>
@@ -20,19 +24,31 @@
 // @ is an alias to /src
 import headerBar from '@/components/headerBar.vue'
 import candyPlan from '@/components/candyPlan.vue'
-
+import { mapState } from 'vuex'
 export default {
-  name: 'home',
   data(){
     return {
-      plist:[
-        {},{}
-      ]
+      
     }
+  },
+  computed:{
+    ...mapState({
+      candyPlans(state){
+        return state.candy.candyPlans;
+      }
+    })
   },
   components: {
     headerBar,
     candyPlan
+  },
+  methods:{
+    queryCandyPlans(){
+      this.$store.dispatch('candy/queryCandyPlans');
+    }
+  },
+  mounted(){
+    this.queryCandyPlans();
   }
 }
 </script>
@@ -61,10 +77,15 @@ export default {
     .list{
       display:flex;
       overflow-x: auto;
-      margin:0 0.08rem;
+      justify-content: space-between;
+      margin:0 0.08rem 0 0.08rem;
       .plan{
         flex-shrink:0;
-        margin:0 0.1rem;
+        margin:0.1rem 0.1rem;
+      }
+      .plan:last-child{
+        // margin:0.1rem 0.18rem 0.1rem 0.1rem;
+        margin-right:0.1rem;
       }
     }
     .list::-webkit-scrollbar{

@@ -1,10 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './user.js'
+import candy from './candy.js'
 Vue.use(Vuex)
 
-const state = {}
-const mutations = {}
+const state = {
+    error:{}
+}
+const mutations = {
+    error(state, error){
+        state.error = error;
+    }
+}
 const actions = {}
 
 export default new Vuex.Store({
@@ -12,6 +19,7 @@ export default new Vuex.Store({
   mutations,
   actions,
   modules:{
-    user
+    user,
+    candy
   }
 })

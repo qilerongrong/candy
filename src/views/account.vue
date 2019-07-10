@@ -1,21 +1,21 @@
 <template>
     <div class="account">
         <header-bar>
-            <div slot="left" class="left"><span class="back"></span></div>
+            <div slot="left" class="left" @click="goBack"><span class="back"></span></div>
             <div slot="center">用户主页</div>
             <div slot="right" class="right"><span>登出</span></div>
         </header-bar>
         <div class="box user-info">
             <img class="avatar" src="../assets/imgs/avatar.png"/>
-            <span class="status">账号已验证</span>
-            <span class="mobile">+8615000000000</span>
+            <span class="status" >账号已验证</span>
+            <span class="mobile" v-if="userInfo.username">+{{userInfo.telCountryCode}}{{userInfo.username}}</span>
         </div>
         <div class="account-info">
             <div class="title">账户总额</div>
             <div class="box info">
                 <div class="lr account">
-                    <div class="cl">12222.22</div>
-                    <div class="cr">66666.66</div>
+                    <div class="cl">{{wallet.coinAmount|fix2}}</div>
+                    <div class="cr">{{wallet.totalAmount|fix2}}</div>
                 </div>
                 <div class="lr">
                     <div class="cl">可提现余额</div>
@@ -23,7 +23,7 @@
                 </div>
                 <div class="lr action">
                     <div class="cl withdraw">申请提现</div>
-                    <div class="cr deposit">存入代币</div>
+                    <div class="cr deposit" @click="deposit">存入代币</div>
                 </div>
                 <div><router-link>点击查看存款提现明细</router-link></div>
             </div>
@@ -34,16 +34,73 @@
                 <div class="block total"></div>
             </div>
         </div>
-        <!-- <el-dialog>
-        </el-dialog> -->
+        <el-dialog :visible.sync="showAddress" title="存款地址" width="90%" center>
+            <div class="no-address" v-if="!coinAddress.address">
+                <el-button class="btn-address" type="primary" @click="generateCoinAddress">获取地址</el-button>
+            </div>
+            <div class="address-wrapper" v-else>
+                <div>存款地址</div>
+                <div class="address">{{coinAddress.address}}</div>
+                <el-button class="btn-copy" type="primary" @click="copyAddress">复制地址</el-button>
+                <div class="qrcode">
+                    <div>扫码存款</div>
+                    <div><qrcode :text="coinAddress.address" dotScale=0.55></qrcode></div>
+                </div>
+                <div class="tip"></div>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import headerBar from '@/components/headerBar.vue' 
+    import qrcode from 'vue-qr'
+    import { mapState } from 'vuex'
     export default {
+        data(){
+            return {
+                showAddress:false
+            }
+        },
+        computed:{
+            ...mapState({
+                userInfo:state => state.user.userInfo,
+                coinAddress:state => state.candy.coinAddress,
+                wallet:state => state.user.wallet
+            })
+        },
         components:{
-            headerBar
+            headerBar,
+            qrcode
+        },
+        methods:{
+            goBack(){
+                this.$router.back();
+            },
+            fetchCoinAddress(){
+                this.$store.dispatch('candy/fetchCoinAddress')
+            },
+            generateCoinAddress(){
+                this.$store.dispatch('candy/generateCoinAddress')
+            },
+            initAddressQrCode(){
+
+            },
+            deposit(){
+                this.showAddress = true;
+                if(!this.coinAddress.address){
+                    this.fetchCoinAddress();
+                }
+            },
+            queryWallet(){
+                this.$store.dispatch('user/wallet');
+            },
+            copyAddress(){
+
+            }
+        },
+        mounted(){
+            this.queryWallet();
         }
     }
 </script>
@@ -144,5 +201,26 @@
         .cr{
             text-align:right;
         }
+    }
+    .no-address{
+        display:flex;
+        .btn-address{
+            margin: auto;
+        }
+    }
+    .address-wrapper{
+        text-align:center;
+    }
+    .btn-copy{
+        width:100%;
+        margin:0.04rem 0 0.1rem;
+    }
+    .address{
+        text-align:center;
+    }
+    .qrcode{
+        display:flex;
+        flex-direction: column;
+        align-items: center;
     }
 </style>

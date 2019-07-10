@@ -3,7 +3,7 @@
         <div  class="program-title">超级守护者计划</div>
         <div  class="program-rate-outter-wrapper">
             <div  class="program-rate-wrapper">
-                <div  class="program-rate">2.00<span  class="program-rate-percentage">%</span></div>
+                <div  class="program-rate">{{model&&model.interestperdiem*100|fix2}}<span  class="program-rate-percentage">%</span></div>
                 <div  class="program-rate-daily">每日收益</div>
             </div>
         </div>
@@ -18,12 +18,21 @@
             </div>
         </div>
         <div  class="program-tags-wrapper">
-            <div  class="program-tag">15天回报</div>
+            <div  class="program-tag">{{model&&model.perioddays}}天回报</div>
             <div  class="program-tag">每日派息</div>
             <div  class="program-tag">年化730%</div>
         </div>
     </div>
 </template>
+
+<script>
+    export default {
+      data(){
+        return {}
+      },
+      props:['model']
+    }
+</script>
 
 <style lang="scss" scoped>
 .program-wrapper {
@@ -59,7 +68,7 @@
 }
 .program-rate-percentage {
   font-size: 0.24rem;
-  margin-left: -10rem;
+  // margin-left: -0.10rem;
 }
 .program-rate-daily {
   font-size: 0.13rem;

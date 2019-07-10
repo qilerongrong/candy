@@ -33,6 +33,13 @@
           </div>
           <span  class="forget-password">忘记密码？</span>
         </div>
+        <div  class="password-wrapper email-sign-up-section-wrapper">
+          <div  class="sign-up-detail-title">验证码</div>
+          <div  class="relative verify-code-wrapper">
+            <el-input placeholder="手机验证码" size="medium" v-model="phoneCode"></el-input>
+            <el-button class="btn-code" :type="timer?'info':'primary'" @click="getVerifyCode" :disabled="timer" size="medium">{{codeTip}}{{timer?'(s)':''}}</el-button>
+          </div>
+        </div>
         <div  class="register-button" @click="login">点此登录</div>
         <div  class="h5-footer-wrapper">
           <div  class="have-got-account-txt text-center">
@@ -51,7 +58,11 @@ export default {
   data(){
     return {
       username:'',
-      password:''
+      password:'',
+      phoneCode:'',
+      backUrl:this.$route.query.backUrl||'',
+      codeTip:'获取验证码',
+      timer:null
     }
   },
   components: {
@@ -59,7 +70,30 @@ export default {
   },
   methods:{
     login(){
-      
+      this.$store.dispatch('user/login',{username:this.username,password:this.password,phoneCode:this.phoneCode}).then((res) => {
+        if(this.backUrl){
+          document.location.href = decodeURIComponent(this.backUrl);
+          // this.$route.push({name:'home'});
+        }else{
+          this.$router.push({name:'home'});
+        }
+        
+      })
+    },
+    getVerifyCode(){
+      this.$store.dispatch('user/verifyCode',{username:this.username}).then(() => {
+        this.codeTip = 59;
+        this.timer = setInterval(() => {
+          if(this.codeTip === 1){
+            this.codeTip = '获取验证码';
+            clearInterval(this.timer);
+            this.timer = null;
+          }else{
+            this.codeTip--;
+          }
+          
+        },1000);
+      });
     }
   }
 };
@@ -78,7 +112,7 @@ export default {
 //   width: 90%;
 //   margin: 0px 5%;
   padding-top: 4px;
-  padding-bottom: 0.8rem;
+  padding-bottom: 0.4rem;
   margin-top: 0.4rem;
 }
 .sign-up-header-wrapper {
@@ -163,9 +197,13 @@ export default {
   width: 65%;
   .el-input__inner{
     border:0 none;
-    border-radius: 0px;
+      background:transparent;
   }
-  
+}
+.cellphone-input-wrapper .el-input__inner{
+    border:0 none;
+    background:transparent;
+    border-radius: 0px;
 }
 .register-button {
   background-color: #3d66cc;
@@ -233,5 +271,13 @@ export default {
 }
 .sign-up-detail-wrapper {
   margin-top: 0.40rem;
+}
+.verify-code-wrapper{
+  display:flex;
+  justify-content: space-between;
+  .btn-code{
+    flex-basis: 1.66rem;
+    margin-left:0.14rem;
+  }
 }
 </style>
