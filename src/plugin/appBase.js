@@ -4,6 +4,10 @@ const appBase = {
             const val = Number(value);
             return isNaN(val)?0.00:val.toFixed(2);
         })
+        Vue.filter('fix4',function(value){
+            const val = Number(value);
+            return isNaN(val)?0.00:val.toFixed(4);
+        })
     }
 }
 

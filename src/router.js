@@ -9,6 +9,12 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'index',
+      redirect:'/home'
+      // component: () => import ( /* webpackChunkName : "index"  */ './views/home.vue')
+    },
+    {
+      path: '/home',
       name: 'home',
       component: () => import ( /* webpackChunkName : "index"  */ './views/home.vue')
     },
@@ -30,6 +36,18 @@ export default new Router({
       path:'/record',
       name:'record',
       component: () => import(/* webpackChunkName: "record" */ './views/record.vue')
+    },{
+      path:'/invite/:code',
+      name:'invite',
+      redirect:(to) => {
+        console.log(to);
+        const code = to.params.code;
+        return {
+          name:'regist',
+          query:{code}
+        }
+      }
+      // component:() => import(/* webpackChunkName: "record" */ './views/regist.vue')
     }
   ]
 })

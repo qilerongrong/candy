@@ -2,6 +2,8 @@ import axios from 'axios'
 import user from './user.js'
 import candy from './candy.js'
 import store from '../store/index.js'
+import JSEncrypt from 'jsencrypt'
+
 const apiBasePath = "/api";
 axios.defaults.baseURL = apiBasePath;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -41,6 +43,13 @@ export function getToken(){
     return store.state.user && store.state.user.userInfo.token||'';
 }
 
+export function rsa(str){
+    const publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCyJdVXw+TvnFnE2ElRmJflkFO20wSjJzS+XV887at9jTKa+EhpSg7aCNgCcFQfCEVpHVKegR4s02+4RH4q+y0gP/yIjAdyKAh16gC9NiM83WpN/PfBCOon55bIJI5G0OBi1I0el+3rpBqtRRzlRfiOXi4C6pmO0ayVmP5rVNASsQIDAQAB";
+    let encryptor = new JSEncrypt();  
+    encryptor.setPublicKey(publicKey);  
+    let rsaResult = encryptor.encrypt(str); 
+    return rsaResult;
+}
 export default {
     user,
     candy

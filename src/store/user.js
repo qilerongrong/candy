@@ -1,11 +1,13 @@
 import api from '../api/index.js' 
 const state = {
+    // loginInfo
     userInfo:{
         username:null,
         telCountryCode:'86',
         token:null,
         status:0 // -1:未登录，0:登录状态，1:
     },
+    userDetail:{},
     wallet:{}
 }
 
@@ -16,6 +18,9 @@ const mutations = {
         if(storage){
             storage.setItem('userInfo',JSON.stringify(userInfo));
         }
+    },
+    setUserDetail(state, detail){
+        state.userDetail = detail;
     },
     updateWallet(state,wallet){
         state.wallet = wallet;
@@ -53,6 +58,11 @@ const actions = {
     },
     async verifyCode({ commit },{username}){
         await api.user.fetchVerifyCode({username});
+    },
+    async detail({ commit }){
+        const info = await api.user.fetchUserInfo();
+        commit('setUserDetail',info);
+        return info;
     }
 }
 

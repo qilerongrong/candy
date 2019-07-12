@@ -1,6 +1,6 @@
 import axios from 'axios'
 import store from '../store/index.js'
-import { getToken } from './index.js'
+import { getToken, rsa } from './index.js'
 const queryCandyPlans = async function(){
     const result = await axios({
         url:'/candies/periods',
@@ -11,20 +11,19 @@ const queryCandyPlans = async function(){
     return result;
 }
 
-const getCoinAddress = async function(){
+const getCoinAddress =  function(){
     const coinType = "WST"
-    const result = await axios({
+    return axios({
         url:'/u/address/v2',
         params:{coinType},
         headers:{
             Authorization:getToken()
         }
     });
-    return result;
 }
-const generateCoinAddress = async function(){
+const generateCoinAddress = function(){
     const coinType = "WST"
-    const result = await axios({
+    return axios({
         url:'/address',
         data:`coinType=${coinType}`,
         method:'post',
@@ -32,7 +31,21 @@ const generateCoinAddress = async function(){
             Authorization:getToken()
         }
     });
-    return result;
+}
+const withdraw = function({txTo,amount,withdrawFee,password,phoneCode}){
+    const data = {
+        coinType:'WST',
+        txTo,
+        amount,
+        withdrawFee,
+        password,
+        phoneCode
+    }
+    return axios({
+        url:'withdraw/create',
+        method:'post',
+        data:`val=${rsa(data)}`
+    })
 }
 
 export default {

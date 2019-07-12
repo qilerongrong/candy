@@ -1,6 +1,6 @@
 <template>
-    <div   class="program-wrapper">
-        <div  class="program-title">超级守护者计划</div>
+    <div class="program-wrapper" @click="openLock">
+        <div  class="program-title">{{model&&model.title}}</div>
         <div  class="program-rate-outter-wrapper">
             <div  class="program-rate-wrapper">
                 <div  class="program-rate">{{model&&model.interestperdiem*100|fix2}}<span  class="program-rate-percentage">%</span></div>
@@ -10,27 +10,68 @@
         <div  class="program-info-wrapper">
             <div  class="program-info">
                 <div  class="program-info-title">已存入额度</div>
-                <div  class="current-number">24022296 OATH</div>
+                <div  class="current-number">{{model.currentLock||'--'}} WST</div>
             </div>
             <div  class="program-progress-bar-wrapper">
                 <div  class="program-progress-bar-outter"></div>
-                <div  class="program-progress-bar-inner" style="width: 80.0743%;"></div>
+                <div  class="program-progress-bar-inner" :style="{width:progress}"></div>
             </div>
         </div>
         <div  class="program-tags-wrapper">
             <div  class="program-tag">{{model&&model.perioddays}}天回报</div>
             <div  class="program-tag">每日派息</div>
-            <div  class="program-tag">年化730%</div>
+            <div  class="program-tag">糖果派送</div>
         </div>
+        <el-dialog class="lock-dlg" :visible.sync="showLock" :title="model.title" center width="90%">
+          <div class="base">
+            <div class="rate">
+              <span class="text">{{model.interestperdiem*100|fix2}}%</span>
+              <span>每日利率</span>
+            </div>
+            <div class="sep"></div>
+            <div class="period">
+              <span class="text">{{model.perioddays}}天</span>
+              <span>锁仓周期</span>
+            </div>
+          </div>
+          <div class="desc">
+            <p>分红方式：<br/>红利将以每天分红的方式自动转入您的钱包余额内。</p>
+            <p>邀请好友，无限红利:<br/>
+               邀请好友来参加守护者计划，将获得额外的好友每日红利奖励，无限累加<br/>
+               第一代好友50%额外奖励，第二代30%额外奖励，第三代20%的额外奖励
+            </p>
+          </div>
+          <div class="lock">
+            <div>账户余额：</div>
+            <div>存币数量：</div>
+          </div>
+          <div slot="footer"></div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     export default {
       data(){
-        return {}
+        return {
+          showLock:false
+        }
       },
-      props:['model']
+      props:['model'],
+      computed:{
+        progress(){
+          if(this.model){
+            return (this.model.currentLock/this.model.maxLock)*100 + "%";
+          }else{
+            return "0%"
+          }
+        }
+      },
+      methods:{
+        openLock(){
+          this.showLock = true;
+        }
+      }
     }
 </script>
 
@@ -138,5 +179,39 @@
   background: #6691FD;
   position: absolute;
   left: 0.14rem;
+}
+.lock-dlg{
+  .base{
+    display:flex;
+    justify-content: space-between;
+    border-bottom:1px solid #B6C2E2;
+    .rate{
+      text-align:left;
+      display:flex;
+      flex-direction: column;
+    }
+    .period{
+      text-align:right;
+      display:flex;
+      flex-direction: column;
+    }
+    .text{
+      color:#6691FD;
+      font-weight:bold;
+      font-size:0.4rem;
+    }
+    .sep{
+      width:1px;
+      background: #B6C2E2;
+      height:0.8rem;
+    }
+  }
+  .desc{
+    font-size:0.12rem;
+    p{
+      margin:0.06rem 0;
+      line-height:0.18rem;
+    }
+  }
 }
 </style>

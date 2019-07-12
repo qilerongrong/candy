@@ -22,7 +22,7 @@
                     <div class="cr">存款余额</div>
                 </div>
                 <div class="lr action">
-                    <div class="cl withdraw">申请提现</div>
+                    <div class="cl withdraw" @click="openWithdraw">申请提现</div>
                     <div class="cr deposit" @click="deposit">存入代币</div>
                 </div>
                 <div><router-link>点击查看存款提现明细</router-link></div>
@@ -41,12 +41,35 @@
             <div class="address-wrapper" v-else>
                 <div>存款地址</div>
                 <div class="address">{{coinAddress.address}}</div>
-                <el-button class="btn-copy" type="primary" @click="copyAddress">复制地址</el-button>
+                <el-button class="btn-copy" type="primary">复制地址</el-button>
                 <div class="qrcode">
                     <div>扫码存款</div>
                     <div><qrcode :text="coinAddress.address" dotScale=0.55></qrcode></div>
                 </div>
                 <div class="tip"></div>
+            </div>
+        </el-dialog>
+        <el-dialog class="withdraw-dlg" :visible.sync="showWithdraw" :rules="rules" width="90%" title="提现" center>
+            <el-form :model="withdraw">
+                <el-form-item label="费率" label-width="0.9rem">
+                    0.0008
+                </el-form-item>
+                <el-form-item label="提现至" label-width="0.9rem" >
+                    <el-input v-model="withdraw.txTo" size="medium" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="提现数量" label-width="0.9rem">
+                    <el-input v-model="withdraw.amount" size="medium" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="登录密码" label-width="0.9rem">
+                    <el-input v-model="withdraw.password" size="medium" show-password autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="短信验证码" label-width="0.9rem">
+                    <el-input v-model="withdraw.phoneCode" size="medium" autocomplete="off"></el-input>
+                    <el-button>获取验证码</el-button>
+                </el-form-item>
+            </el-form>
+            <div slot="footer">
+                <el-button type="primary" class="btn-withdraw">确认提现</el-button>
             </div>
         </el-dialog>
     </div>
@@ -56,10 +79,21 @@
     import headerBar from '@/components/headerBar.vue' 
     import qrcode from 'vue-qr'
     import { mapState } from 'vuex'
+    import Clipboard from 'clipboard'
     export default {
         data(){
             return {
-                showAddress:false
+                showAddress:false,
+                showWithdraw:true,
+                withdraw:{},
+                rules:{
+                    txTo:[
+                        {required:true, message:'请输入提现地址', trigger:'blur'}
+                    ],
+                    amount:[
+                        {required:true, }
+                    ]
+                }
             }
         },
         computed:{
@@ -95,12 +129,29 @@
             queryWallet(){
                 this.$store.dispatch('user/wallet');
             },
-            copyAddress(){
-
+            openWithdraw(){
+                this.showWithdraw = true;
             }
         },
         mounted(){
             this.queryWallet();
+            const clipboard1 = new Clipboard('.btn-copy');
+            clipboard1.on('success', (e) => {
+                this.$message({
+                    type:'success',
+                    message:'复制成功！',
+                    center:true,
+                    duration:2000
+                });
+            })
+            clipboard1.on('error', (e) => {
+                this.$message({
+                    type:'error',
+                    message:'复制失败！',
+                    center:true,
+                    duration:2000
+                });
+            })
         }
     }
 </script>
@@ -223,4 +274,13 @@
         flex-direction: column;
         align-items: center;
     }
+    .withdraw-dlg{
+        .el-form-item{
+            margin-bottom:0.1rem;
+        }
+        .btn-withdraw{
+            width:'100%'
+        }
+    }
+    
 </style>

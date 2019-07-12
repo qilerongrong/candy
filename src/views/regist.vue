@@ -41,7 +41,7 @@
         <div  class="password-wrapper email-sign-up-section-wrapper">
           <div  class="sign-up-detail-title">邀请码（选填）</div>
           <div  class="relative password-input-wrapper">
-            <el-input placeholder="输入邀请码" size="medium" v-model="inviteCode" show-password></el-input>
+            <el-input placeholder="输入邀请码" size="medium" v-model="inviteCode"></el-input>
           </div>
         </div>
         <div  class="password-wrapper email-sign-up-section-wrapper">
@@ -71,7 +71,7 @@ export default {
       username:'',
       password:'',
       confirmPassword:'',
-      inviteCode:'',
+      inviteCode:this.$route.query && this.$route.query.code || '',
       verifyCode:'',
       codeTip:'获取验证码'
     }

@@ -42,10 +42,19 @@ const fetchVerifyCode = function({username}){
         data:`username=${username}&telCountryCode=${telCountryCode}`
     })
 }
+const fetchUserInfo = function(){
+    return axios({
+        url:'/u/infos',
+        headers:{
+            Authorization:getToken()
+        }
+    })
+}
 export default {
     login,
     regist,
     logout,
     wallet,
-    fetchVerifyCode
+    fetchVerifyCode,
+    fetchUserInfo
 }
