@@ -14,8 +14,8 @@
             <div class="title">账户总额</div>
             <div class="box info">
                 <div class="lr account">
-                    <div class="cl">{{wallet.coinAmount|fix2}}</div>
-                    <div class="cr">{{wallet.totalAmount|fix2}}</div>
+                    <div class="cl">{{wallet.coinAmount|money}}</div>
+                    <div class="cr">{{wallet.totalAmount|money}}</div>
                 </div>
                 <div class="lr">
                     <div class="cl">可提现余额</div>
@@ -41,7 +41,7 @@
             <div class="address-wrapper" v-else>
                 <div>存款地址</div>
                 <div class="address">{{coinAddress.address}}</div>
-                <el-button class="btn-copy" type="primary">复制地址</el-button>
+                <el-button class="btn-copy" type="primary" :data-clipboard-text="coinAddress.address">复制地址</el-button>
                 <div class="qrcode">
                     <div>扫码存款</div>
                     <div><qrcode :text="coinAddress.address" dotScale=0.55></qrcode></div>
@@ -49,27 +49,27 @@
                 <div class="tip"></div>
             </div>
         </el-dialog>
-        <el-dialog class="withdraw-dlg" :visible.sync="showWithdraw" :rules="rules" width="90%" title="提现" center>
-            <el-form :model="withdraw">
-                <el-form-item label="费率" label-width="0.9rem">
-                    0.0008
+        <el-dialog class="withdraw-dlg" :visible.sync="showWithdraw"  width="90%" title="提现" center top="10vh">
+            <el-form :model="withdraw" :rules="rules" ref="withdraw-form">
+                <el-form-item label="费率" label-width="1rem">
+                    {{withdraw.withdrawFee}}
                 </el-form-item>
-                <el-form-item label="提现至" label-width="0.9rem" >
+                <el-form-item label="提现至" label-width="1rem" prop="txTo">
                     <el-input v-model="withdraw.txTo" size="medium" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="提现数量" label-width="0.9rem">
+                <el-form-item label="提现数量" label-width="1rem" prop="amount">
                     <el-input v-model="withdraw.amount" size="medium" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="登录密码" label-width="0.9rem">
+                <el-form-item label="登录密码" label-width="1rem" prop="password">
                     <el-input v-model="withdraw.password" size="medium" show-password autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="短信验证码" label-width="0.9rem">
-                    <el-input v-model="withdraw.phoneCode" size="medium" autocomplete="off"></el-input>
-                    <el-button>获取验证码</el-button>
+                <el-form-item label="短信验证码" class="item-code" label-width="1rem" prop="phoneCode">
+                    <el-input v-model="withdraw.phoneCode" size="medium" autocomplete="off" width="50%"></el-input>
+                    <verify-code :username="userInfo && userInfo.username"></verify-code>
                 </el-form-item>
             </el-form>
             <div slot="footer">
-                <el-button type="primary" class="btn-withdraw">确认提现</el-button>
+                <el-button type="primary" class="btn-withdraw" @click="createWithdraw">确认提现</el-button>
             </div>
         </el-dialog>
     </div>
@@ -80,18 +80,28 @@
     import qrcode from 'vue-qr'
     import { mapState } from 'vuex'
     import Clipboard from 'clipboard'
+    import verifyCode from '@/components/verifyCode.vue'
     export default {
         data(){
             return {
                 showAddress:false,
-                showWithdraw:true,
-                withdraw:{},
+                showWithdraw:false,
+                withdraw:{
+                    withdrawFee:1
+                },
                 rules:{
                     txTo:[
                         {required:true, message:'请输入提现地址', trigger:'blur'}
                     ],
                     amount:[
-                        {required:true, }
+                        {required:true, message:'请输入提现金额', trigger:'blur'},
+                        {min:1, message:'最小提现金额为1'}
+                    ],
+                    password:[
+                        {required:true, message:'请输入登录密码', trigger:'blur'}
+                    ],
+                    phoneCode:[
+                        {required:true, message:'请输入手机验证码', trigger:'blur'}
                     ]
                 }
             }
@@ -105,7 +115,8 @@
         },
         components:{
             headerBar,
-            qrcode
+            qrcode,
+            verifyCode
         },
         methods:{
             goBack(){
@@ -131,6 +142,18 @@
             },
             openWithdraw(){
                 this.showWithdraw = true;
+            },
+            createWithdraw(){
+                this.$refs['withdraw-form'].validate().then((res) => {
+                    alert(res);
+                    this.$store.dispatch('candy/withdraw',this.withdraw)
+                }).then((res) => {
+                    this.$message({
+                        type:'success',
+                        message:'提现成功！'
+                    })
+                })
+                
             }
         },
         mounted(){
@@ -276,10 +299,26 @@
     }
     .withdraw-dlg{
         .el-form-item{
-            margin-bottom:0.1rem;
+            margin-bottom:0.16rem;
+            .el-form-item__label{
+                padding-right:0.1rem;
+            }
         }
         .btn-withdraw{
             width:'100%'
+        }
+        .item-code{
+            .el-input{
+                width:50%;
+            }
+            .el-button{
+                width:45%;
+                margin-left:5%;
+                // vertical-align: middel;
+                padding-left:0.06rem;
+                padding-right:0.06rem;
+                text-align:center;
+            }
         }
     }
     

@@ -37,7 +37,7 @@
           <div  class="sign-up-detail-title">验证码</div>
           <div  class="relative verify-code-wrapper">
             <el-input placeholder="手机验证码" size="medium" v-model="phoneCode"></el-input>
-            <el-button class="btn-code" :type="timer?'info':'primary'" @click="getVerifyCode" :disabled="timer" size="medium">{{codeTip}}{{timer?'(s)':''}}</el-button>
+            <verify-code :username="username"></verify-code>
           </div>
         </div>
         <div  class="register-button" @click="login">点此登录</div>
@@ -54,19 +54,21 @@
 
 <script>
 import headerBar from "@/components/headerBar.vue";
+import verifyCode from "@/components/verifyCode.vue"
 export default {
   data(){
     return {
       username:'',
       password:'',
       phoneCode:'',
-      backUrl:this.$route.query.backUrl||'',
-      codeTip:'获取验证码',
-      timer:null
+      backUrl:this.$route.query.backUrl||''
+      // codeTip:'获取验证码',
+      // timer:null
     }
   },
   components: {
-    headerBar
+    headerBar,
+    verifyCode
   },
   methods:{
     login(){
@@ -79,22 +81,22 @@ export default {
         }
         
       })
-    },
-    getVerifyCode(){
-      this.$store.dispatch('user/verifyCode',{username:this.username}).then(() => {
-        this.codeTip = 59;
-        this.timer = setInterval(() => {
-          if(this.codeTip === 1){
-            this.codeTip = '获取验证码';
-            clearInterval(this.timer);
-            this.timer = null;
-          }else{
-            this.codeTip--;
-          }
-          
-        },1000);
-      });
     }
+    // getVerifyCode(){
+    //   this.$store.dispatch('user/verifyCode',{username:this.username}).then(() => {
+    //     this.codeTip = 59;
+    //     this.timer = setInterval(() => {
+    //       if(this.codeTip === 1){
+    //         this.codeTip = '获取验证码';
+    //         clearInterval(this.timer);
+    //         this.timer = null;
+    //       }else{
+    //         this.codeTip--;
+    //       }
+          
+    //     },1000);
+    //   });
+    // }
   }
 };
 </script>

@@ -33,23 +33,31 @@ const generateCoinAddress = function(){
     });
 }
 const withdraw = function({txTo,amount,withdrawFee,password,phoneCode}){
-    const data = {
-        coinType:'WST',
-        txTo,
-        amount,
-        withdrawFee,
-        password,
-        phoneCode
-    }
+    // const data = JSON.stringify({
+    //     coinType:'WST',
+    //     chainType:"ERC20",
+    //     txTo,
+    //     amount,
+    //     withdrawFee,
+    //     password,
+    //     phoneCode
+    // })+'#'+ new Date().getTime();
+    const data = '{"coinType":"WST","txTo":"0x263f8d9c4b004759c6385d8b6d42209","amount":10,"withdrawFee":1,"password":"Victor007","phoneCode":"123456","chainType":"ERC20"}#'+ new Date().getTime()
+    console.log('data',data);
+    console.log('rsa',rsa(data));
     return axios({
         url:'withdraw/create',
         method:'post',
-        data:`val=${rsa(data)}`
+        data:`val=${rsa(data)}`,
+        headers:{
+            Authorization:getToken()
+        }
     })
 }
 
 export default {
     queryCandyPlans,
     getCoinAddress,
-    generateCoinAddress
+    generateCoinAddress,
+    withdraw
 }
