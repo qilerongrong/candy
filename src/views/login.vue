@@ -1,6 +1,11 @@
 <template>
+<div class="login-container">
+<header-bar>
+      <img class="logo" src="../assets/logo.png" slot="left"/>
+      <span class="header-title" slot="center">用户登录</span>
+      <span slot="right" class="header-right"></span>
+    </header-bar>
   <div class="login">
-    <header-bar></header-bar>
     <div class="con">
       <div  class="sign-up-wrapper">
         <!-- <div  class="sign-up-header-wrapper">
@@ -50,6 +55,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -79,7 +85,6 @@ export default {
         }else{
           this.$router.push({name:'home'});
         }
-        
       })
     }
     // getVerifyCode(){
@@ -102,10 +107,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.login {
+.login-container{
   background-color: #3d66cc;
+  min-height: 100vh;
+  .logo{
+    width: 0.3rem;
+  }
+  .header-title{
+    color:#fff;
+  }
+  .header-right{
+    width:0.3rem
+  }
+}
+.login {
+  min-height:calc(100vh - 0.6rem);
   padding: 0 0.2rem;
-  height: 100vh;
+  display:flex;
+  .con{
+    margin:auto;
+  }
 }
 .sign-up-wrapper {
   background-color: white;
@@ -115,7 +136,7 @@ export default {
 //   margin: 0px 5%;
   padding-top: 4px;
   padding-bottom: 0.4rem;
-  margin-top: 0.4rem;
+  // margin-top: 0.4rem;
 }
 .sign-up-header-wrapper {
   position: relative;
@@ -280,6 +301,15 @@ export default {
   .btn-code{
     flex-basis: 1.66rem;
     margin-left:0.14rem;
+  }
+}
+</style>
+
+<style lang="scss">
+.cellphone-number-input {
+  .el-input__inner{
+    border:0 none;
+    background:transparent;
   }
 }
 </style>

@@ -3,7 +3,7 @@
         <header-bar>
             <div slot="left" class="left" @click="goBack"><span class="back"></span></div>
             <div slot="center">用户主页</div>
-            <div slot="right" class="right"><span>登出</span></div>
+            <div slot="right" class="right" @click="logout"><span>登出</span></div>
         </header-bar>
         <div class="box user-info">
             <img class="avatar" src="../assets/imgs/avatar.png"/>
@@ -25,7 +25,7 @@
                     <div class="cl withdraw" @click="openWithdraw">申请提现</div>
                     <div class="cr deposit" @click="deposit">存入代币</div>
                 </div>
-                <div><router-link>点击查看存款提现明细</router-link></div>
+                <div class="goRecord"><router-link :to="{name:'transactionRecord'}">点击查看存款提现明细</router-link></div>
             </div>
         </div>
         <div class="interest-info">
@@ -41,7 +41,7 @@
             <div class="address-wrapper" v-else>
                 <div>存款地址</div>
                 <div class="address">{{coinAddress.address}}</div>
-                <el-button class="btn-copy" type="primary" :data-clipboard-text="coinAddress.address">复制地址</el-button>
+                <el-button class="btn-copy" type="primary" v-clipboard:success="copySuccess" v-clipboard:error="copyFail" v-clipboard:copy="coinAddress.address">复制地址</el-button>
                 <div class="qrcode">
                     <div>扫码存款</div>
                     <div><qrcode :text="coinAddress.address" dotScale=0.55></qrcode></div>
@@ -57,8 +57,8 @@
                 <el-form-item label="提现至" label-width="1rem" prop="txTo">
                     <el-input v-model="withdraw.txTo" size="medium" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="提现数量" label-width="1rem" prop="amount">
-                    <el-input v-model="withdraw.amount" size="medium" autocomplete="off"></el-input>
+                <el-form-item label="提现数量" label-width="1rem" prop="amount" >
+                    <el-input v-model="withdraw.amount" size="medium" autocomplete="off" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="登录密码" label-width="1rem" prop="password">
                     <el-input v-model="withdraw.password" size="medium" show-password autocomplete="off"></el-input>
@@ -83,7 +83,15 @@
     import verifyCode from '@/components/verifyCode.vue'
     export default {
         data(){
+            const checkAmount = (rule, value, callback) => {
+                if(value && value < 5){
+                    return callback(new Error('最小提现金额为5'));
+                }else{
+                    callback();
+                }
+            }
             return {
+                hasHistory:true,
                 showAddress:false,
                 showWithdraw:false,
                 withdraw:{
@@ -95,7 +103,7 @@
                     ],
                     amount:[
                         {required:true, message:'请输入提现金额', trigger:'blur'},
-                        {min:1, message:'最小提现金额为1'}
+                        {validator:checkAmount, trigger:'blur'}
                     ],
                     password:[
                         {required:true, message:'请输入登录密码', trigger:'blur'}
@@ -145,36 +153,56 @@
             },
             createWithdraw(){
                 this.$refs['withdraw-form'].validate().then((res) => {
-                    alert(res);
-                    this.$store.dispatch('candy/withdraw',this.withdraw)
+                    return this.$store.dispatch('candy/withdraw',this.withdraw)
                 }).then((res) => {
                     this.$message({
                         type:'success',
                         message:'提现成功！'
                     })
                 })
-                
-            }
-        },
-        mounted(){
-            this.queryWallet();
-            const clipboard1 = new Clipboard('.btn-copy');
-            clipboard1.on('success', (e) => {
+            },
+            logout(){
+                this.$store.dispatch('user/logout').then(() => {
+                    this.$router.push({name:'login'});
+                })
+            },
+            copySuccess(){
                 this.$message({
                     type:'success',
                     message:'复制成功！',
                     center:true,
                     duration:2000
                 });
-            })
-            clipboard1.on('error', (e) => {
+            },
+            copyFail(){
                 this.$message({
                     type:'error',
                     message:'复制失败！',
                     center:true,
                     duration:2000
                 });
-            })
+            }
+        },
+        mounted(){
+            // console.log(this.$router.history);
+            this.queryWallet();
+            // const clipboard1 = new Clipboard('.btn-copy');
+            // clipboard1.on('success', (e) => {
+            //     this.$message({
+            //         type:'success',
+            //         message:'复制成功！',
+            //         center:true,
+            //         duration:2000
+            //     });
+            // })
+            // clipboard1.on('error', (e) => {
+            //     this.$message({
+            //         type:'error',
+            //         message:'复制失败！',
+            //         center:true,
+            //         duration:2000
+            //     });
+            // })
         }
     }
 </script>
@@ -321,5 +349,9 @@
             }
         }
     }
-    
+    .goRecord{
+        text-align:center;
+        font-size:0.14rem;
+        margin-top:0.24rem;
+    }
 </style>

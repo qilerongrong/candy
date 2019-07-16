@@ -19,14 +19,13 @@
                 this.$store.dispatch('user/verifyCode',{username:this.username}).then(() => {
                     this.codeTip = 59;
                     this.timer = setInterval(() => {
-                    if(this.codeTip === 1){
-                        this.codeTip = '获取验证码';
-                        clearInterval(this.timer);
-                        this.timer = null;
-                    }else{
-                        this.codeTip--;
-                    }
-                    
+                        if(this.codeTip === 1){
+                            this.codeTip = '获取验证码';
+                            clearInterval(this.timer);
+                            this.timer = null;
+                        }else{
+                            this.codeTip--;
+                        }
                     },1000);
                 });
             }

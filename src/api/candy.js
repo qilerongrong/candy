@@ -33,31 +33,55 @@ const generateCoinAddress = function(){
     });
 }
 const withdraw = function({txTo,amount,withdrawFee,password,phoneCode}){
-    // const data = JSON.stringify({
-    //     coinType:'WST',
-    //     chainType:"ERC20",
-    //     txTo,
-    //     amount,
-    //     withdrawFee,
-    //     password,
-    //     phoneCode
-    // })+'#'+ new Date().getTime();
-    const data = '{"coinType":"WST","txTo":"0x263f8d9c4b004759c6385d8b6d42209","amount":10,"withdrawFee":1,"password":"Victor007","phoneCode":"123456","chainType":"ERC20"}#'+ new Date().getTime()
-    console.log('data',data);
-    console.log('rsa',rsa(data));
+    let data = JSON.stringify({
+        coinType:'WST',
+        chainType:"ERC20",
+        txTo,
+        amount,
+        withdrawFee,
+        password,
+        phoneCode
+    })+'#'+ new Date().getTime();
+    const cData = rsa(data);
     return axios({
         url:'withdraw/create',
         method:'post',
-        data:`val=${rsa(data)}`,
+        data:`val=${encodeURIComponent(cData)}`,
         headers:{
             Authorization:getToken()
         }
     })
 }
-
+const lock = function({lockAmount,lockDays}){
+    return axios({
+        url:'candies/lock',
+        method:'post',
+        data:`lockAmount=${lockAmount}&lockDays=${lockDays}`,
+        headers:{
+            Authorization:getToken()
+        }
+    })
+}
+const queryTransactionList = function({page,size,txType}){
+    const coinType = 'WST';
+    return axios({
+        url:'transaction/list',
+        params:{
+            page,
+            size,
+            coinType,
+            txType  
+        },
+        headers:{
+            Authorization:getToken()
+        }
+    })
+}
 export default {
     queryCandyPlans,
     getCoinAddress,
     generateCoinAddress,
-    withdraw
+    withdraw,
+    lock,
+    queryTransactionList
 }

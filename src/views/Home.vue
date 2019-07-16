@@ -15,7 +15,7 @@
       <div class="plist">
         <div class="title">糖果派送，存币解锁</div>
         <div class="list">
-          <candy-plan class="plan" v-for="(item, index) in candyPlans" :key="index" :model="item"></candy-plan>
+          <candy-plan @lock="queryCandyPlans" class="plan" v-for="(item, index) in candyPlans" :key="index" :model="item"></candy-plan>
         </div>
       </div>
       <div class="plist">
@@ -28,10 +28,10 @@
         <div class="invite-dlg">
           <div class="item text">您的邀请码</div>
           <div class="item"><span class="code">{{inviteCode}}</span></div>
-          <div class="item sep"><el-button class="copy copy1" :data-clipboard-text="inviteCode" type="primary">复制邀请码</el-button></div>
+          <div class="item sep"><el-button class="copy copy1" v-clipboard:success="copySuccess" v-clipboard:error="copyFail" v-clipboard:copy="inviteCode" type="primary">复制邀请码</el-button></div>
           <div class="item text">您的邀请链接</div>
           <div class="item link">{{inviteLink}}</div>
-          <div class="item"><el-button class="copy copy2" :data-clipboard-text="inviteLink" type="primary">复制邀请链接</el-button></div>
+          <div class="item"><el-button class="copy copy2" v-clipboard:success="copySuccess" v-clipboard:error="copyFail" v-clipboard:copy="inviteLink" type="primary">复制邀请链接</el-button></div>
         </div>
       </el-dialog>
   </div>
@@ -77,45 +77,61 @@ export default {
     invite(){
       this.showInvite = true;
       // this.fetchInviteCode()
+    },
+    copySuccess(){
+        this.$message({
+            type:'success',
+            message:'复制成功！',
+            center:true,
+            duration:2000
+        });
+    },
+    copyFail(){
+        this.$message({
+            type:'error',
+            message:'复制失败！',
+            center:true,
+            duration:2000
+        });
     }
   },
   mounted(){
     this.initUserInfo();
     this.queryCandyPlans();
-    const clipboard1 = new Clipboard('.copy1');
-    const clipboard2 = new Clipboard('.copy2');
-    clipboard1.on('success', (e) => {
-      this.$message({
-        type:'success',
-        message:'复制成功！',
-        center:true,
-        duration:2000
-      });
-    })
-    clipboard1.on('error', (e) => {
-      this.$message({
-        type:'error',
-        message:'复制失败！',
-        center:true,
-        duration:2000
-      });
-    })
-    clipboard2.on('success', (e) => {
-      this.$message({
-        type:'success',
-        message:'复制成功！',
-        center:true,
-        duration:2000
-      });
-    })
-    clipboard2.on('error', (e) => {
-      this.$message({
-        type:'error',
-        message:'复制失败！',
-        center:true,
-        duration:2000
-      });
-    })
+    // const clipboard1 = new Clipboard('.copy1');
+    // const clipboard2 = new Clipboard('.copy2');
+    // clipboard1.on('success', (e) => {
+    //   this.$message({
+    //     type:'success',
+    //     message:'复制成功！',
+    //     center:true,
+    //     duration:2000
+    //   });
+    // })
+    // clipboard1.on('error', (e) => {
+    //   this.$message({
+    //     type:'error',
+    //     message:'复制失败！',
+    //     center:true,
+    //     duration:2000
+    //   });
+    // })
+    // clipboard2.on('success', (e) => {
+    //   this.$message({
+    //     type:'success',
+    //     message:'复制成功！',
+    //     center:true,
+    //     duration:2000
+    //   });
+    // })
+    // clipboard2.on('error', (e) => {
+    //   this.$message({
+    //     type:'error',
+    //     message:'复制失败！',
+    //     center:true,
+    //     duration:2000
+    //   });
+    // })
   }
 }
 </script>

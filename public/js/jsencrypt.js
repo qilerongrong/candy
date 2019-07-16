@@ -5362,8 +5362,9 @@ var JSEncrypt = /** @class */ (function () {
 
     JSEncrypt.prototype.encryptLong = function(string) {  
         var k = this.getKey();
-        // var maxLength = (((k.n.bitLength()+7)>>3)-11);
-        var maxLength = 117;
+        var maxLength = (((k.n.bitLength()+7)>>3)-11);
+        debugger;
+        // var maxLength = 117;
     
         try {
           var lt = "";
@@ -5384,7 +5385,7 @@ var JSEncrypt = /** @class */ (function () {
         catch (ex) {
           return false;
         }
-      };
+    };
     JSEncrypt.version = "3.0.0-rc.1";
     return JSEncrypt;
 }());

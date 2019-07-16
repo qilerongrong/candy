@@ -1,8 +1,8 @@
 <template>
     <div class="header-bar">
-        <slot name="left" />
+        <slot class="left" name="left" />
         <slot name="center" />
-        <slot name="right" />
+        <slot class="right" name="right" />
     </div>
 </template>
 

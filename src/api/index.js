@@ -47,8 +47,17 @@ export function rsa(str){
     const publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCyJdVXw+TvnFnE2ElRmJflkFO20wSjJzS+XV887at9jTKa+EhpSg7aCNgCcFQfCEVpHVKegR4s02+4RH4q+y0gP/yIjAdyKAh16gC9NiM83WpN/PfBCOon55bIJI5G0OBi1I0el+3rpBqtRRzlRfiOXi4C6pmO0ayVmP5rVNASsQIDAQAB";
     let encryptor = new JSEncrypt();  
     encryptor.setPublicKey(publicKey);  
-    let rsaResult = encryptor.encryptLong(str); 
-    return rsaResult;
+    if (str.length > 117) {
+        let lt = str.match(/.{1,117}/g);
+        let cArr = lt.map((entry) => {
+            return encryptor.encrypt(entry)
+        })
+        return cArr.join(',');
+    }else{
+        return encryptor.encrypt(str)
+    }
+    // let rsaResult = encryptor.encryptLong(str); 
+    // return rsaResult;
 }
 export default {
     user,

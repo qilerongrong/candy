@@ -1,6 +1,12 @@
 <template>
-  <div class="login">
-    <header-bar></header-bar>
+<div class="regist-container">
+  <header-bar>
+      <img class="logo" src="../assets/logo.png" slot="left"/>
+      <span class="header-title" slot="center">用户注册</span>
+      <span slot="right" class="header-right"></span>
+    </header-bar>
+  <div class="regist">
+    <!-- <header-bar></header-bar> -->
     <div class="con">
       <div  class="sign-up-wrapper">
         <!-- <div  class="sign-up-header-wrapper">
@@ -47,8 +53,8 @@
         <div  class="password-wrapper email-sign-up-section-wrapper">
           <div  class="sign-up-detail-title">验证码</div>
           <div  class="relative verify-code-wrapper">
-            <el-input placeholder="手机验证码" size="medium" v-model="verifyCode"></el-input>
-            <el-button class="btn-code" @click="getVerifyCode()" size="medium">{{codeTip}}</el-button>
+            <el-input placeholder="手机验证码" size="medium" v-model="phoneCode"></el-input>
+            <verify-code :username="username"></verify-code>
           </div>
         </div>
         <div  class="register-button" @click="regist">注册</div>
@@ -61,50 +67,64 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
-import headerBar from "@/components/headerBar.vue";
+import headerBar from "@/components/headerBar.vue"
+import verifyCode from "@/components/verifyCode.vue"
 export default {
   data(){
     return {
       username:'',
       password:'',
+      phoneCode:'',
       confirmPassword:'',
-      inviteCode:this.$route.query && this.$route.query.code || '',
-      verifyCode:'',
-      codeTip:'获取验证码'
+      inviteCode:this.$route.query && this.$route.query.code || ''
     }
   },
   components: {
-    headerBar
+    headerBar,
+    verifyCode
   },
   methods:{
     regist(){
       this.$store.dispatch('user/regist',{
         username:this.username,
         password:this.password,
-        verifyCode:this.verifyCode,
+        verifyCode:this.phoneCode,
         inviteCode:this.inviteCode
       }).then((res) => {
-        console.log(res);
-        if(res.code === 0){
-          this.$router.push({name:'login'});
-        }
+        this.$message({
+          type:'success',
+          message:'恭喜你，注册成功。',
+          center:true,
+          duration:2000
+        })
+        this.$router.push({name:'login'});
       });
-    },
-    getVerifyCode(){
-      this.$store.dispatch('user')
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.login {
+.regist-container{
   background-color: #3d66cc;
-  padding: 0 0.2rem;
-  height: 100vh;
+  min-height: 100vh;
+  .logo{
+    width: 0.3rem;
+  }
+  .header-title{
+    color:#fff;
+  }
+  .header-right{
+    width:0.3rem
+  }
+}
+.regist {
+  padding: 0.2rem 0.2rem;
+  // display:flex;
 }
 .sign-up-wrapper {
   background-color: white;
@@ -113,8 +133,8 @@ export default {
 //   width: 90%;
 //   margin: 0px 5%;
   padding-top: 4px;
-  padding-bottom: 0.8rem;
-  margin-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  margin-top: 0rem;
 }
 .sign-up-header-wrapper {
   position: relative;
@@ -213,7 +233,7 @@ export default {
 }
 .have-got-account-txt {
   font-size: 0.14rem;
-  margin-top: 0.6rem;
+  margin-top: 0.2rem;
   text-align:center;
 }
 // .email-input {
@@ -276,8 +296,13 @@ export default {
     margin-left:0.14rem;
   }
 }
+</style>
 
-.el-input__inner:hover,.el-input__inner:focus{
-  border:0 none;
+<style lang="scss">
+.cellphone-number-input {
+  .el-input__inner{
+    border:0 none;
+    background:transparent;
+  }
 }
 </style>

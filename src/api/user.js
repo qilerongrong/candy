@@ -12,19 +12,21 @@ const login = function({username='',password='',telCountryCode='86',phoneCode=''
         data:`username=${username}&password=${password}&phoneCode=${phoneCode}&telCountryCode=${telCountryCode}`
     })
 }
-const regist =  function({username='',password='',verifyCode='',telCountryCode='86'}){
-    return axios.post('/users/register',{
-        username,
-        password,
-        verifyCode,
-        telCountryCode
-    }).then((res) => {
-        console.log(res);
-        return res
+const regist =  function({username='',password='',verifyCode='',telCountryCode='86',inviteCode=''}){
+    return axios({
+        url:'/users/register',
+        method:'post',
+        data:`username=${username}&password=${password}&verifyCode=${verifyCode}&telCountryCode=${telCountryCode}&inviteCode=${inviteCode}`
     })
 }
 const logout = function(){
-    return axios.post('/users/logout')
+    return axios({
+        url:'/users/logout',
+        method:'post',
+        headers:{
+            Authorization:getToken()
+        }
+    })
 }
 const wallet = function(){
     return axios({

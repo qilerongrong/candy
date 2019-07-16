@@ -22,7 +22,7 @@
             <div  class="program-tag">每日派息</div>
             <div  class="program-tag">糖果派送</div>
         </div>
-        <el-dialog class="lock-dlg" :visible.sync="showLock" :title="model.title" center width="90%">
+        <el-dialog class="lock-dlg" :visible.sync="showLock" :title="model.title" center width="90%" top="10vh" :append-to-body='true'>
           <div class="base">
             <div class="rate">
               <span class="text">{{model.interestperdiem*100|fix2}}%</span>
@@ -42,23 +42,40 @@
             </p>
           </div>
           <div class="lock">
-            <div>账户余额：</div>
-            <div>存币数量：</div>
+            <el-form>
+              <el-form-item class="account-amount" label="账户余额：" label-width="1rem">
+                <el-input size="small" v-model="accountAmount" disabled></el-input>
+              </el-form-item>
+              <el-form-item class="lock-amount" label="存币数量：" label-width="1rem">
+                <el-input size="small" v-model="lockAmount" type="number"></el-input>
+              </el-form-item>
+            </el-form>
           </div>
-          <div slot="footer"></div>
+          <div slot="footer">
+            <div class="btn-confirm" @click="lock" :class="{valid:isValid}">{{lockText}}</div>
+          </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     export default {
       data(){
         return {
-          showLock:false
+          showLock:false,
+          isValid:false,
+          lockAmount:0,
+          lockText:'请输入锁仓数额',
+          minAmount:1
         }
       },
       props:['model'],
       computed:{
+        ...mapState({
+          // 可提现余额
+          accountAmount:state => state.user.wallet.coinAmount
+        }),
         progress(){
           if(this.model){
             return (this.model.currentLock/this.model.maxLock)*100 + "%";
@@ -70,6 +87,38 @@
       methods:{
         openLock(){
           this.showLock = true;
+        },
+        lock(){
+          debugger;
+          if(!this.isValid){
+            return
+          }
+          const lockDays = this.model.perioddays;
+          this.$store.dispatch('candy/lock',{lockDays,lockAmount:this.lockAmount}).then(() => {
+            this.$message({
+              type:'success',
+              message:'锁仓成功',
+              center:true,
+              duration:2000
+            });
+            this.showLock = false;
+            this.$emit('lock');
+          });
+        }
+      },
+      watch:{
+        lockAmount(){
+          let amount = Number(this.lockAmount);
+          if(!amount){
+            this.lockText = "请输入锁仓数额"
+            this.isValid = false;
+          }else if(amount < this.minAmount){
+            this.lockText = `最小锁仓数额为${this.minAmount}`
+            this.isValid = false;
+          }else{
+            this.lockText = '确认锁仓'
+            this.isValid = true;
+          }
         }
       }
     }
@@ -187,11 +236,13 @@
     border-bottom:1px solid #B6C2E2;
     .rate{
       text-align:left;
+      flex-basis:49%;
       display:flex;
       flex-direction: column;
     }
     .period{
       text-align:right;
+      flex-basis:49%;
       display:flex;
       flex-direction: column;
     }
@@ -212,6 +263,36 @@
       margin:0.06rem 0;
       line-height:0.18rem;
     }
+  }
+  .btn-confirm{
+    // padding:0.15rem;
+    font-size:0.2rem;
+    line-height:0.5rem;
+    color:#fff;
+    background:lightgray;
+  }
+  .valid{
+    background:#6691FD;
+  }
+  .lock{
+    font-size:0.16rem;
+    line-height:0.28rem;
+    .lock-input{
+      display:inline-block;
+    }
+  }
+}
+</style>
+<style lang="scss">
+.lock-dlg{
+  .el-form-item{
+    margin-bottom:0.1rem;
+  }
+  .el-dialog__footer{
+    padding:0
+  }
+  .el-dialog--center .el-dialog__body{
+    padding:0.2rem 0.25rem 0.1rem
   }
 }
 </style>

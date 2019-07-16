@@ -33,10 +33,16 @@ export default new Router({
       name: 'account',
       component: () => import(/* webpackChunkName: "account" */ './views/account.vue')
     },{
-      path:'/record',
-      name:'record',
-      component: () => import(/* webpackChunkName: "record" */ './views/record.vue')
-    },{
+      path:'/lockRecord',
+      name:'lockRecord',
+      component: () => import(/* webpackChunkName: "record" */ './views/lockRecord.vue')
+    },
+    ,{
+      path:'/transactionRecord',
+      name:'transactionRecord',
+      component: () => import(/* webpackChunkName: "record" */ './views/transactionRecord.vue')
+    },
+    {
       path:'/invite/:code',
       name:'invite',
       redirect:(to) => {

@@ -5,7 +5,7 @@ const state = {
         username:null,
         telCountryCode:'86',
         token:null,
-        status:0 // -1:未登录，0:登录状态，1:
+        status:0 // 0:未登录，1:登录状态
     },
     userDetail:{},
     wallet:{}
@@ -40,15 +40,23 @@ const actions = {
             // return res;
         });
     },
+    logout({ commit }){
+        return api.user.logout().then(() => {
+            const userInfo = {
+                username:null,
+                telCountryCode:'86',
+                token:null,
+                status:0 
+            }
+            commit('setUserInfo',userInfo);
+        });
+    },
     regist({ commit },{ username, password, verifyCode}){
         const telCountryCode = '86'
         // const res = await api.user.regist({ username, password, verifyCode,telCountryCode });
         // console.log(res);
         // return res;
         return api.user.regist({ username, password, verifyCode,telCountryCode });
-    },
-    logout(){
-
     },
     async wallet({ commit }){
         const result = await api.user.wallet();

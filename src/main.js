@@ -2,10 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router.js'
 import store from './store/index.js'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import VueClipboard from 'vue-clipboard2'
 import appBase from './plugin/appBase.js'
 Vue.use(ElementUI);
+Vue.use(VueClipboard);
 Vue.use(appBase);
 Vue.config.productionTip = false
 // 获取用户信息
